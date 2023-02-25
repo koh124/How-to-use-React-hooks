@@ -22,6 +22,12 @@ const App = () => {
     setCount(count + 1);
   }
 
+  // 更新関数に関数を渡すことでuseStateの値を更新することもできる
+  // 更新関数の引数には現在のstateが渡されて、戻り値が次の状態になる
+  const handleCountMinus = () => {
+    setCount((prevCount) => prevCount - 1 );
+  }
+
   /* ※※※※※ DOMの再レンダリングはどのように行われるのか？ ※※※※※
   Reactは仮想DOM（バーチャルDOM）という仕組みを使っている
   仮想DOMは実際のDOMを仮想的に構築しているが、まだ反映されていない状態のもの
@@ -59,14 +65,41 @@ const App = () => {
     console.log(ref);
   };
 
-  // useReducer
-  // pending...
+  /*
+  useReducer
+  useReducerはuseStateのように状態を扱うためのもう一つのフック
+  複雑な状態遷移をシンプルに記述することができる
+  配列やオブジェクトを状態として扱う場合に用いられる場合が多い
+  useStateよりも複雑な用途に向いている
+  */
+  // reducer (現在の状態, dispatchから渡されるaction): 次の状態 {}
+  const reducer = (currentCount, action) => {
+    switch (action) {
+      case "Increment":
+        return currentCount + 1;
+      case "Decrement":
+        return currentCount - 1;
+      case "Double":
+        return currentCount * 2;
+      case "Reset":
+        return 0;
+      default:
+        return currentCount;
+    }
+  }
+  // const [現在の状態, dispatch] = useReducer(reducer, 初期状態)
+  const [_count, dispatch] = useReducer(reducer, 0);
+  const dispatcher = (event) => {
+    // dispatchにactionを渡す
+    dispatch(event.target.value);
+  }
 
   return (
     <>
       <div>
         <h1>useState, useEffect</h1>
         <button onClick={handleClick}>＋</button> {/* クリックすると＋1 */}
+        <button onClick={handleCountMinus}>−</button>
         <p>{count}</p>
       </div>
 
@@ -81,6 +114,15 @@ const App = () => {
         <h1>useRef</h1>
         <input type="text" ref={ref} />
         <button onClick={handleRef}>useRef</button> {/* クリックするとinputタグに入力した内容などを見ることができる */}
+      </div>
+
+      <div>
+        <h1>useReducer</h1>
+        <input onClick={ dispatcher } type="button" value="Increment" />
+        <input onClick={ dispatcher } type="button" value="Decrement" />
+        <input onClick={ dispatcher } type="button" value="Double" />
+        <input onClick={ dispatcher } type="button" value="Reset" />
+        <p>{_count}</p>
       </div>
     </>
   );
