@@ -7,7 +7,7 @@ const path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: "./src/js/client.js",
+  entry: "./src/js/client.jsx",
   module: {
     rules: [
       {
@@ -54,6 +54,9 @@ module.exports = {
       new TerserPlugin(), // minify js
       new CssMinimizerPlugin() // minify css
     ],
+  },
+  resolve: {
+    extensions: [".js", ".jsx"]
   },
   devServer: {
     historyApiFallback: true,
