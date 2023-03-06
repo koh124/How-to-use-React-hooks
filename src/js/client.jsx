@@ -17,9 +17,11 @@ const userInfo = {
 const UserInfoContext = createContext(userInfo);
 
 root.render(
-  <UserInfoContext.Provider value={userInfo}>
-    <App/>
-  </UserInfoContext.Provider>
+  // <React.StrictMode>
+    <UserInfoContext.Provider value={userInfo}>
+      <App/>
+    </UserInfoContext.Provider>
+  // </React.StrictMode>
 );
 
 // Contextはコンポーネントという扱いの模様
