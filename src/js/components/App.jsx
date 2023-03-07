@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef, useReducer, memo, useCallback, useMemo } from "react";
+import React, { useContext, useEffect, useState, useRef, useReducer, memo, useCallback, useMemo, useLayoutEffect } from "react";
 import UserInfoContext from "../client";
 
 // memoでレンダリングを制御する
@@ -207,6 +207,30 @@ const App = () => {
       console.log(count);
     }
   }, [count]);
+
+  // useLayoutEffect
+  // useEffectとほとんど同じだが、実行されるタイミングが違う
+  // useEffectは仮想DOMが構築されてレンダリングされたあとに実行されるが、
+  // useLayoutEffectは仮想DOMが構築されてレンダリングされる前に実行される
+  // あまりにも重たい処理を書くと画面描画が遅れてしまう可能性がある
+  // 【実行順序検証用】
+  // 1. useMemo・・・仮想DOM構築前？
+  // 2. useLayoutEffect・・・仮想DOM構築後、レンダリングの直前
+  // 3. useEffect・・・レンダリング後
+  useLayoutEffect(() => {
+    console.log('Layout Effect');
+    return () => {
+      console.log('hoge')
+    }
+  }, [count]);
+
+  useEffect(() => {
+    console.log('useEffect');
+  }, []);
+
+  useMemo(() => {
+    console.log('useMemo');
+  }, []);
 
   // useContext
   // useContextはReduxという考え方に近い
