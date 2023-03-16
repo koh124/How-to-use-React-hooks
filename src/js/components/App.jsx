@@ -241,12 +241,33 @@ const App = () => {
   const userinfo = useContext(UserInfoContext);
 
   // useRef
-  // useRefは指定したDOMへの参照を作成することができる
+  // useRefは読み書き可能なrefオブジェクトを生成する
+  // useRefには大きく分けて次の2つの使い方がある
+  // 1. データを保持する
+  // 2. DOMへの参照を作る
+
+  // ・データを保持する
+  // refオブジェクトはstateやuseReducerと同様に状態を保存しておくことができる
+  // 最大の特徴は、refオブジェクトの値を書き換えても再レンダリングが発生しないこと
+  // そのため、描画に関係のないデータを保持しておきたい場合に使う
+  // メモ化と似ている
+
+  const refRandNumber = useRef(0);
+  const handleClickRef = () => {
+    refRandNumber.current = Math.random() * 100;
+    console.log(`the value was updated ${refRandNumber.current}`);
+  }
+
+  // ・DOMへの参照を作る
+  // refオブジェクトをコンポーネントに渡すことで、指定したDOMへの参照を作成することができる
+  // このrefオブジェクトはDOMそのものなので、
+  // DOMの座標を取得したり、高さを取得してstateに応じて切り替えることでアコーディオンを作成したり、色々できる
   const ref = useRef();
 
-  // DOMへの参照を見ることができる
+  // DOMを色々操作することができる
   const handleRef = () => {
-    console.log(ref);
+    console.log(ref.current.outerHTML);
+    console.log(ref.current.value);
   };
 
   /*
@@ -343,8 +364,16 @@ const App = () => {
 
       <div>
         <h1>useRef</h1>
+        {/*
+            refオブジェクトを更新しても再レンダリングが発生しないことが分かる
+            コンソールに値が出力されるので内部的にはデータは変わっている
+        */}
+        <div>
+          <p>{refRandNumber.current}</p>
+          <button onClick={handleClickRef}>Random Number</button>
+        </div>
         <input type="text" ref={ref} />
-        <button onClick={handleRef}>useRef</button> {/* クリックするとinputタグに入力した内容などを見ることができる */}
+        <button onClick={handleRef}>useRef</button> {/* クリックするとDOMを操作する */}
       </div>
 
       <div>
